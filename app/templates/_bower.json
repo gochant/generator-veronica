@@ -1,0 +1,17 @@
+{
+	"name": "<%= _.slugify(appName) %>",
+    "dependencies": {
+        "veronica": "latest",
+		"veronica-mvc": "latest",
+        "backbone": "latest",
+        "kendo-ui": "latest",
+		"font-awesome": "~4.0.x",
+        "bootstrap": "~3.0.x",
+		"respond": "latest",
+		"pnotify": "~1.x.x"
+    },
+    "devDependencies": {
+        "requirejs-text":"latest",
+        "require-css":"latest"
+    }
+}
