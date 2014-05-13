@@ -3,25 +3,24 @@ define([
     './config/subpages',
     './config/extensions',
     './config/layouts'
-], function (core, pages, extension, layouts) {
+], function (core, pages, extensions, layouts) {
 
-    var app = core.createApp('<%= _.slugify(appName) %>', {
+    var app = core.createApp('test', {
         autoReport: true
     });
 
     app.use('veronica-mvc');
 
-    app.start().done(function () {
+    app.launch().done(function () {
 
-        if (app.core.getConfig().controls) {
-            app.core.registerWidgets(app.core.getConfig().controls);
-        }
+        app.core.registerWidgets(app.core.getConfig().controls);
 
-        app.ext(extension);
+        app.ext(extensions);
         app.addPage(pages);
         app.addLayout(layouts);
 
-        app.sandbox.on('appStarted.' + app.name, function () {
+        app.sandbox.on('appStarted', function () {
+            app.startRouter();
             $('#global-loading').remove();
         });
 

@@ -17,7 +17,7 @@
     return function (framePath) {
         framePath || (framePath = '../vendor');
         return {
-            debug: false,
+            debug: true,
             appDir: './frontend',
             baseUrl: "scripts",
             dir: './public',
@@ -27,7 +27,10 @@
                 'eventemitter': framePath + '/eventemitter2/lib/eventemitter2',
                 'backbone': framePath + '/backbone/backbone',
                 'bootstrap': framePath + '/bootstrap/dist/js/bootstrap',
-                'kendo': framePath + '/kendo-ui/src/js/kendo.web',
+               // 'kendo': framePath + '/kendo-ui/src/js/kendo.web',
+                'kendo-ui-culture': framePath + '/kendo-ui/js/cultures/kendo.culture.zh-CN.min',
+                'kendo-ui-global': framePath + '/kendo-global/lang/kendo.zh-CN',
+
                 'pnotify': framePath + '/pnotify/jquery.pnotify',
 
                 'text': framePath + '/requirejs-text/text',
@@ -41,13 +44,20 @@
                 'backbone': { deps: ['underscore', 'jquery'], 'exports': 'Backbone' }
             },
             packages: [{
-                name: 'veronica', location: '../vendor/veronica/lib'
+                name: 'kendo', location: framePath + '/kendo-ui/src/js', main: 'kendo.ui.core'
             }, {
-                name: 'veronica-mvc', location: '../vendor/veronica-mvc/lib'
+                name: 'veronica', location: framePath + '/veronica/lib'
+            }, {
+                name: 'veronica-mvc', location: framePath + '/veronica-mvc/lib'
             }],
             sources: {
-                'default': '../widgets'
+                'default': '../widgets/frame',
+                'business': '../widgets/business'
             },
+            pages: ['./frontend/pages/login'],
+            combine: [], 
+            buildPaths: {},
+            cdn: [],
             controls: []
         };
     }

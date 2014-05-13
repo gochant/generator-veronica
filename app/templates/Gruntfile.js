@@ -8,14 +8,14 @@ module.exports = function (grunt) {
     var emptyPaths = {};
 
     _.each(reqConf.paths, function (item, name) {
-        if (!_.contains(['text', 'css', 'normalize', 'css-builder'], name)) {
+        if (!_.contains(['text', 'css', 'normalize', 'css-builder'], name) && _.contains(reqConf.cdn, name)) {
             emptyPaths[name] = 'empty:';
         }
     });
 
-    _.each(reqConf.packages, function (item, name) {
-        emptyPaths[item.name] = 'empty:';
-    });
+    //_.each(reqConf.packages, function (item, name) {
+    //    emptyPaths[item.name] = 'empty:';
+    //});
 
     var controlsPath = {};
     _.each(reqConf.controls, function (control) {
@@ -27,7 +27,7 @@ module.exports = function (grunt) {
         controlsPath[control + '/templates'] = control + '/templates';
     });
 
-    // »ñÈ¡²¿¼şÄ¿Â¼ÏÂµÄÄ£¿é£¨µ±Ç°Ô´Â·¾¶£¬ËùÓĞÔ´Â·¾¶£©
+    // è·å–éƒ¨ä»¶ç›®å½•ä¸‹çš„æ¨¡å—ï¼ˆå½“å‰æºè·¯å¾„ï¼Œæ‰€æœ‰æºè·¯å¾„ï¼‰
     var getModules = function (opt, widgets) {
 
         if (!opt) {
@@ -46,7 +46,7 @@ module.exports = function (grunt) {
         });
 
         var result = _.map(_.reject(dirs, function (dir) {
-            // ÅÅ³ıÌØÊâµÄÎÄ¼ş£¨¼Ğ£©Ãû³ÆºÍÆäËû°üÂ·¾¶Ãû³Æ
+            // æ’é™¤ç‰¹æ®Šçš„æ–‡ä»¶ï¼ˆå¤¹ï¼‰åç§°å’Œå…¶ä»–åŒ…è·¯å¾„åç§°
             return _.find(['.css', '.js', '.DS_Store', 'styles'].concat(subSource), function (tag) {
                 return dir.indexOf(tag) > -1;
             });
@@ -54,18 +54,19 @@ module.exports = function (grunt) {
 
             return {
                 name: dir + '/main',
-                exclude: ['text', 'css']
+                exclude: ['text', 'css', 'jquery']
             };
         });
         return result;
     };
 
-    // ¹¤³ÌÅäÖÃ
+    // å·¥ç¨‹é…ç½®
     grunt.initConfig({
-        // ÔªÊı¾İ
+        // å…ƒæ•°æ®
         pkg: pkg,
-        // ÈÎÎñÅäÖÃ
+        // ä»»åŠ¡é…ç½®
         requirejs: {
+            // å•ä¸ªç½‘ç«™
             site: {
                 options: {
                     appDir: reqConf.appDir,
@@ -77,14 +78,22 @@ module.exports = function (grunt) {
                     paths: reqConf.paths,
                     shim: reqConf.shim,
                     packages: reqConf.packages,
-                    // optimize: "none",  // uglify
-                    optimize: "uglify",
-                    uglify: {
+                    // optimize: "none",  // æ˜¯å¦å¯ç”¨å‹ç¼© uglify
+                    optimize: "none",
 
+                    onBuildRead: function (moduleName, path, contents) {
+                        if (moduleName.indexOf('require-conf') > -1) {
+                            return contents.replace(/debug\s*\:\s*(true|false)/g, 'debug: false, optimized: true');
+                        }
+                        return contents;
                     },
+                    preserveLicenseComments: false,
                     removeCombined: true,
                     fileExclusionRegExp: /^\./
                 }
+            },
+            page: {
+
             },
             widget: {
                 options: {
@@ -93,13 +102,18 @@ module.exports = function (grunt) {
                     modules: getModules(),
                     paths: _.extend({}, controlsPath, emptyPaths, grunt.option('path')),
                     shim: reqConf.shim,
-                    optimize: "uglify",
+                    optimize: "none", // uglify2
                     // optimizeCss: "none",
                     removeCombined: true,
+                    preserveLicenseComments: false,
                     fileExclusionRegExp: /^\./,
                     onBuildWrite: function (moduleName, path, contents) {
+                        // Bugfixedï¼šå½“åœ¨æœªçŸ¥çš„æƒ…å†µä¸‹ï¼Œæœ‰å¯èƒ½ä¼šå‡ºç°è¯†åˆ«ä¸äº†éƒ¨ä»¶çš„æƒ…å†µ
                         var packageName = moduleName.substring(0, moduleName.indexOf('/main'));
-                        return contents + "\ndefine('" + packageName + "', ['" + moduleName + "'], function (main) { return main; })";
+                        if (packageName.length > 0) {
+                            return contents + "\ndefine('" + packageName + "', ['" + moduleName + "'], function (main) { return main; })";
+                        }
+                        return contents;
                     }
 
                 }
@@ -116,18 +130,20 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            // TODO: ÕâÀïĞ´ËÀÁËÒ»Ğ©Â·¾¶£¬Ğè¿¼ÂÇÒ»ÖÖ¸üÓÅÑÅµÄ·½Ê½
+            // TODO: è¿™é‡Œå†™æ­»äº†ä¸€äº›è·¯å¾„ï¼Œéœ€è€ƒè™‘ä¸€ç§æ›´ä¼˜é›…çš„æ–¹å¼
             main: [
+                'public/**/*.less',
+                'public/**/build.txt',
+                'public/scripts/layouts'
+            ],
+            vendor: [
                 'public/vendor/backbone',
                 'public/vendor/eventemitter2',
                 'public/vendor/jquery',
                 'public/vendor/pnotify',
                 'public/vendor/underscore',
                 'public/vendor/veronica',
-                'public/vendor/veronica-mvc',
-                'public/**/*.less',
-                'public/**/build.txt',
-                'public/scripts/layouts'
+                'public/vendor/veronica-mvc'
             ],
             source: [
                 'frontend'
@@ -150,9 +166,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-css-combo');
 
     grunt.registerTask('site', ['requirejs:site']);
-    // ´ò°üµ¥¸ö²å¼ş°ü
+    // æ‰“åŒ…å•ä¸ªéƒ¨ä»¶åŒ…
     grunt.registerTask('widget', ['requirejs:widget']);
-    // ´ò°üËùÓĞ²å¼ş°ü
+    // æ‰“åŒ…æ‰€æœ‰éƒ¨ä»¶åŒ…
     grunt.registerTask('widgets', function () {
         var widgets = _.map(reqConf.sources, function (item) {
             return {
@@ -164,24 +180,38 @@ module.exports = function (grunt) {
         _.each(widgets, function (opt, i) {
             var modules = getModules(opt, widgets);
             var widgetsPath = {};
-
-            // ½âÎöÒÔÏÂ¼¸¸öÎÄ¼şÏà¶ÔÓÚ²¿¼şÎÄ¼ş¼ĞµÄÕıÈ·Â·¾¶
-            _.each(['text', 'css', 'normalize', 'css-builder'], function (mod) {
-                var modPath = reqConf.paths[mod];
-                var truthPath = path.join(reqConf.appDir, reqConf.baseUrl, modPath);
+            var widgetsPackages = [];
+            // è·å–ç›¸å¯¹äºéƒ¨ä»¶çš„çœŸå®è·¯å¾„
+            var getTruePath = function (basePath) {
+                var wholePath = path.join(reqConf.appDir, reqConf.baseUrl, basePath);
                 var dep = 10;
-                while (truthPath !== path.join(opt.source, modPath) && dep !== 0) {
-                    modPath = path.join('../', modPath);
+                while (wholePath !== path.join(opt.source, basePath) && dep !== 0) {
+                    basePath = path.join('../', basePath);
                     dep--;
                 }
+                return basePath;
+            }
+
+            // è§£æä»¥ä¸‹å‡ ä¸ªæ–‡ä»¶ç›¸å¯¹äºéƒ¨ä»¶æ–‡ä»¶å¤¹çš„æ­£ç¡®è·¯å¾„
+            //  ['text', 'css', 'normalize', 'css-builder']
+            _.each(reqConf.paths, function (modPath, mod) {
+                //var modPath = reqConf.paths[mod];
+                modPath = getTruePath(modPath);
                 widgetsPath[mod] = modPath;
             });
+            _.each(reqConf.packages, function (pkg) {
+                var clonePkg = _.clone(pkg);
+                clonePkg.location = getTruePath(clonePkg.location);
+                widgetsPackages.push(clonePkg);
+            });
+
             grunt.config('requirejs.widget' + i, {
                 options: _.extend(grunt.config('requirejs.widget.options'), {
                     baseUrl: opt.source,
                     dir: opt.target,
-                    paths: _.extend({}, controlsPath, emptyPaths, widgetsPath),
-                    modules: modules
+                    paths: _.extend({}, controlsPath, emptyPaths, widgetsPath, reqConf.buildPaths || {}),
+                    modules: modules,
+                    packages: widgetsPackages
                 })
             });
             grunt.config('concat.widget' + i, {
@@ -210,23 +240,53 @@ module.exports = function (grunt) {
                 ]
             })
 
-            // Ñ¹Ëõ¸ÃÄ¿Â¼ÏÂËùÓĞ²å¼ş
+            // å‹ç¼©è¯¥ç›®å½•ä¸‹æ‰€æœ‰æ’ä»¶
             grunt.task.run('requirejs:widget' + i);
-            // ºÏ²¢¸ÃÄ¿Â¼ÏÂËùÓĞCSSÎÄ¼ş£¨½â¾öÔÚIEÏÂ31¸öÑùÊ½±íÏŞÖÆÎÊÌâ£©
+            // åˆå¹¶è¯¥ç›®å½•ä¸‹æ‰€æœ‰CSSæ–‡ä»¶ï¼ˆè§£å†³åœ¨IEä¸‹31ä¸ªæ ·å¼è¡¨é™åˆ¶é—®é¢˜ï¼‰
             grunt.task.run('concat:widget' + i);
-            // ¿½±´Í¼Æ¬
+            // æ‹·è´å›¾ç‰‡
             // grunt.task.run('copy:widget' + i);
-            // ÇåÀí
+            // æ¸…ç†
             grunt.task.run('clean:widget' + i);
 
+        });
+    });
+
+    grunt.registerTask('pages', function () {
+        var pages = reqConf.pages || [];
+        _.each(pages, function (page, index) {
+            var pageReqConf = require(page + '/scripts/config/require-conf.js')();
+            grunt.config('requirejs.page' + index, {
+                options: {
+                    appDir: pageReqConf.appDir,
+                    baseUrl: pageReqConf.baseUrl,
+                    dir: pageReqConf.dir,
+                    modules: [
+                        { name: 'main', include: pageReqConf.combine || [] }
+                    ],
+                    paths: pageReqConf.paths,
+                    shim: pageReqConf.shim,
+                    packages: pageReqConf.packages,
+                    // optimize: "none",  // uglify
+                    optimize: "uglify",
+                    uglify: {
+
+                    },
+                    removeCombined: true,
+                    fileExclusionRegExp: /^\./
+                }
+            });
+            grunt.task.run('requirejs:page' + index);
         });
     });
 
     grunt.registerTask('default', function () {
         grunt.task.run('site');
         grunt.task.run('widgets');
+        // grunt.task.run('pages');
         grunt.task.run('css_combo');
         grunt.task.run('clean:main');
+        grunt.task.run('clean:vendor');
     });
 
     grunt.registerTask('publish', function () {

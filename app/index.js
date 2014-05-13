@@ -64,16 +64,18 @@ var VeronicaSpaGenerator = yeoman.generators.Base.extend({
         this.template('frontend/scripts/main.js', 'frontend/scripts/main.js');
 
         this.mkdir('frontend/scripts/config');
-        this.copyDir('frontend/scripts/config', ['extensions.js', 'require-conf.js', 'subpages.js']);
+        this.mkdir('frontend/scripts/config', 'frontend/scripts/config');
 
         this.mkdir('frontend/scripts/extensions');
-        this.copyDir('frontend/scripts/extensions', ['ext-lang.js', 'ext-layout.js', 'ext-notify.js', 'ext-router.js']);
 
         this.mkdir('frontend/scripts/layouts');
-        this.copyDir('frontend/scripts/layouts', ['default.html', 'scaffold.html']);
+        this.directory('frontend/scripts/layouts', 'frontend/scripts/layouts');
 
         this.mkdir('frontend/scripts/subpages');
-        this.copyDir('frontend/scripts/subpages', ['_common.js', 'default.js', 'home.js']);
+        this.directory('frontend/scripts/subpages', 'frontend/scripts/subpages');
+
+        this.mkdir('frontend/widgets');
+        this.directory('frontend/widgets', 'frontend/widgets');
 
     },
     projectfiles: function () {

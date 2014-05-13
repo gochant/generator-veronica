@@ -1,4 +1,4 @@
-// 配置要使用的页面
+// 锟斤拷锟斤拷要使锟矫碉拷页锟斤拷
 define(function (require) {
     var _ = require('underscore');
     return _.extend({},

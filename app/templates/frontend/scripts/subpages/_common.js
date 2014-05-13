@@ -1,7 +1,12 @@
 define(function () {
     return {
         '_common': {
-            widgets: []
+            widgets: [{
+                name: 'header',
+                options: {
+                    host: '#content1'
+                }
+            }]
         }
     };
 })
