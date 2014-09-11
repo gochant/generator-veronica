@@ -8,7 +8,6 @@ var chalk = require('chalk');
 var VeronicaSpaGenerator = yeoman.generators.Base.extend({
     init: function () {
         this.pkg = require('../package.json');
-        //  this.reqConf = require(this.pkg.publish.config)();
 
         this.on('end', function () {
             if (!this.options['skip-install']) {
@@ -30,11 +29,11 @@ var VeronicaSpaGenerator = yeoman.generators.Base.extend({
         // have Yeoman greet the user
         // this.log(this.yeoman);
 
-        this.log(chalk.magenta('欢迎使用 VeronicaSpa 生成器.'));
+        this.log(chalk.magenta('Welcome to use veronica generator.'));
 
         var prompts = [{
             name: 'appName',
-            message: '您的应用名称是什么?'
+            message: 'What is your application name?'
         }];
 
         this.prompt(prompts, function (props) {
@@ -48,34 +47,17 @@ var VeronicaSpaGenerator = yeoman.generators.Base.extend({
         this.template('_package.json', 'package.json');
     },
     createDirLayout: function () {
-        this.mkdir('frontend');
-        this.template('frontend/index.html', 'frontend/index.html');
+        this.mkdir('app');
+        this.template('app/index.html', 'app/index.html');
 
-        this.mkdir('frontend/pages');
+        this.mkdir('app/pages');
 
-        this.mkdir('frontend/styles');
-        this.copy('frontend/styles/index.less', 'frontend/styles/index.less');
-        this.copy('frontend/styles/index.css', 'frontend/styles/index.css');
+        this.directory('app/styles', 'app/styles');
 
-        this.mkdir('frontend/widgets');
+        this.template('app/main.js', 'app/main.js');
+        this.copy('app/require-conf.js', 'app/require-conf.js');
 
-        this.mkdir('frontend/scripts');
-        this.template('frontend/scripts/app.js', 'frontend/scripts/app.js');
-        this.template('frontend/scripts/main.js', 'frontend/scripts/main.js');
-
-        this.mkdir('frontend/scripts/config');
-        this.mkdir('frontend/scripts/config', 'frontend/scripts/config');
-
-        this.mkdir('frontend/scripts/extensions');
-
-        this.mkdir('frontend/scripts/layouts');
-        this.directory('frontend/scripts/layouts', 'frontend/scripts/layouts');
-
-        this.mkdir('frontend/scripts/subpages');
-        this.directory('frontend/scripts/subpages', 'frontend/scripts/subpages');
-
-        this.mkdir('frontend/widgets');
-        this.directory('frontend/widgets', 'frontend/widgets');
+        this.directory('app/modules', 'app/modules');
 
     },
     projectfiles: function () {

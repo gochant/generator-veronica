@@ -1,4 +1,4 @@
-# generator-veronica-spa [![Build Status](https://secure.travis-ci.org/someuser/generator-veronica-spa.png?branch=master)](https://travis-ci.org/someuser/generator-veronica-spa)
+# generator-veronica [![Build Status](https://secure.travis-ci.org/someuser/generator-veronica.png?branch=master)](https://travis-ci.org/someuser/generator-veronica)
 
 > [Yeoman](http://yeoman.io) generator
 
@@ -23,16 +23,16 @@ $ npm install -g yo
 
 Yeoman travels light. He didn't pack any generators when he moved in. You can think of a generator like a plug-in. You get to choose what type of application you wish to create, such as a Backbone application or even a Chrome extension.
 
-To install generator-veronica-spa from npm, run:
+To install generator-veronica from npm, run:
 
 ```
-$ npm install -g generator-veronica-spa
+$ npm install -g generator-veronica
 ```
 
 Finally, initiate the generator:
 
 ```
-$ yo veronica-spa
+$ yo veronica
 ```
 
 ### Getting To Know Yeoman
