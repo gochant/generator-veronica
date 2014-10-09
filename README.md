@@ -1,45 +1,44 @@
-# generator-veronica [![Build Status](https://secure.travis-ci.org/someuser/generator-veronica.png?branch=master)](https://travis-ci.org/someuser/generator-veronica)
+# generator-veronica
 
-> [Yeoman](http://yeoman.io) generator
+> [Yeoman](http://yeoman.io) 生成器，用于搭建 veronica 项目脚手架
 
 
 ## Getting Started
 
-### What is Yeoman?
-
-Trick question. It's not a thing. It's this guy:
-
-![](http://i.imgur.com/JHaAlBJ.png)
-
-Basically, he wears a top hat, lives in your computer, and waits for you to tell him what kind of application you wish to create.
-
-Not every new computer comes with a Yeoman pre-installed. He lives in the [npm](https://npmjs.org) package repository. You only have to ask for him once, then he packs up and moves into your hard drive. *Make sure you clean up, he likes new and shiny things.*
+首先应确保安装了 `yo` 脚手架工具
 
 ```
-$ npm install -g yo
+npm install -g yo
 ```
 
-### Yeoman Generators
-
-Yeoman travels light. He didn't pack any generators when he moved in. You can think of a generator like a plug-in. You get to choose what type of application you wish to create, such as a Backbone application or even a Chrome extension.
-
-To install generator-veronica from npm, run:
+从源码库中获取项目 generator-veronica，获取完毕后，
+由于该项目没有在 npm 中注册，因此你需要在 generator-veronica 目录下使用以下命令，以便在后续执行命令时能够链接到本地路径：
 
 ```
-$ npm install -g generator-veronica
+npm link
 ```
 
-Finally, initiate the generator:
+可以创建一个文件夹，例如 `hello-veronica`，在该目录中，执行
 
 ```
-$ yo veronica
+yo veronica
 ```
 
-### Getting To Know Yeoman
+这将创建基本的项目结构，并下载依赖包，至此项目搭建完毕
 
-Yeoman has a heart of gold. He's a person with feelings and opinions, but he's very easy to work with. If you think he's too opinionated, he can be easily convinced.
+### 创建页面部件
 
-If you'd like to get to know Yeoman better and meet some of his friends, [Grunt](http://gruntjs.com) and [Bower](http://bower.io), check out the complete [Getting Started Guide](https://github.com/yeoman/yeoman/wiki/Getting-Started).
+在你放置部件的某个目录下，例如 `widgets` 目录，使用如下命令，将创建页面部件的模板
+
+```
+yo veronica:widget [widget name]
+```
+
+例子：
+
+```
+yo veronica:widget "hello-veronica"
+```
 
 
 ## License

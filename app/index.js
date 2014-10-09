@@ -5,7 +5,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 
 
-var VeronicaSpaGenerator = yeoman.generators.Base.extend({
+var VeronicaGenerator = yeoman.generators.Base.extend({
     init: function () {
         this.pkg = require('../package.json');
 
@@ -69,4 +69,4 @@ var VeronicaSpaGenerator = yeoman.generators.Base.extend({
     }
 });
 
-module.exports = VeronicaSpaGenerator;
+module.exports = VeronicaGenerator;

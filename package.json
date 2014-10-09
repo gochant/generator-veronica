@@ -1,14 +1,14 @@
 {
-  "name": "generator-veronica-spa",
-  "version": "0.0.0",
+  "name": "generator-veronica",
+  "version": "0.1.0",
   "description": "Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
-  "repository": "someuser/generator-veronica-spa",
+  "repository": "gochant/generator-veronica",
   "author": {
-    "name": "",
-    "email": "",
-    "url": "https://github.com/someuser"
+    "name": "gochant",
+    "email": "guochant@gmail.com",
+    "url": "https://github.com/gochant"
   },
   "engines": {
     "node": ">=0.10.0"

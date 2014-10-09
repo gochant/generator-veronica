@@ -13,12 +13,15 @@ module.exports = function (grunt) {
                     baseUrl: '.',
                     dir: './app-release',
                     reqConfig: reqConf,
-                    clean: [''],
+                    clean: [],
                     modules: [{
                         name: 'basic',
                         source: './modules'
                     }],
-                    removeCombined: true
+                    removeCombined: true,
+                    optimize: {
+                        paths: ['!**/build/**/*.js', '!**/test/**/*.js', '!**/*.min.js', '!**/jquery/src/**/*.js']
+                    }
                 }
             }
         }
